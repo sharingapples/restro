@@ -1,0 +1,28 @@
+import uuid from 'uuid/v4';
+import db from '../db';
+import cache from '../cache';
+import mailer from '../mailer';
+
+const RESET_TOKEN_AGE = 3 * 60 * 60 * 1000; // 3 hours
+
+export default async function forgot(username) {
+  // First get the user email from database
+  const user = await db.execute(({ findOne }) => findOne('users', { username }));
+
+  if (!user) {
+    throw new Error('Unknown username');
+  }
+
+  const resetToken = uuid();
+
+  // Include a reset token on cache
+  cache.users.set(resetToken, user.id, RESET_TOKEN_AGE);
+
+  // Send an email with a link to reset the password
+  mailer({
+    from: 'Restro.net <noreply@restro.net>',
+    to: user.email,
+    subject: 'Password reset',
+    text: `Password reset token is ${resetToken}`,
+  });
+}
