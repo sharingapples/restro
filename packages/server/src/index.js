@@ -12,13 +12,15 @@ const app = express();
 const server = http.createServer(app);
 
 // // Start the websocket server
-// start({ server, url: '/redsock/:origin/:token' }, (session) => {
-//   // Check if its a valid user
-//   const user = validateToken(session.params.token);
-//   session.set('user', user);
+start({ server, url: '/redsock/:origin/:token' }, async (session) => {
+  // Check if its a valid user
+  console.log(session.params.origin);
 
-//   // Based on the type of the user, join specific channels
-// });
+  const user = await validateToken(session.params.token);
+  session.set('user', user);
+
+  // Based on the type of the user, join specific channels
+});
 
 // Register all http routes required by the app
 authExpress(app);

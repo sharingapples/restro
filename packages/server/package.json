@@ -4,6 +4,7 @@
   "description": "Restro server",
   "main": "cjs/index.js",
   "scripts": {
+    "test": "jest",
     "build": "../../node_modules/.bin/babel src -d cjs",
     "server-mon": "nodemon --exec ../../node_modules/.bin/babel-node -- src/index.js"
   },
@@ -19,5 +20,14 @@
     "redsock": "^0.2.1",
     "sqlite": "^2.9.2",
     "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "babel-jest": "^22.4.3",
+    "d": "^1.0.0",
+    "jest": "^22.4.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

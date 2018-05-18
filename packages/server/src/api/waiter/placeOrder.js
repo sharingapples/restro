@@ -1,9 +1,9 @@
 import db from '../../db';
+import cache from '../../cache';
 
 export default async function placeOrder(tableId, items) {
   const { session } = this;
   const userId = session.get('user').id;
-  const cache = session.get('cache');
 
   const orderItems = await db.execute(async ({ insert, findOne }) => Promise.all(items.map(async (item) => {
     // Search for an active order for the given table, or create one if none exists
