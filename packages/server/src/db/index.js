@@ -1,3 +1,4 @@
+import path from 'path';
 import sqlite from 'sqlite';
 
 import insert from './insert';
@@ -8,8 +9,7 @@ import update from './update';
 import exec from './exec';
 import query from './query';
 
-export const dbPromise = sqlite.open('../restro.sqlite', { Promise });
-
+export const dbPromise = sqlite.open('restro.sqlite', { Promise });
 
 let dbInstance = null;
 
@@ -19,6 +19,9 @@ async function getInstance() {
   }
 
   const db = await dbPromise;
+
+  await db.migrate({ migrationsPath: path.resolve(__dirname, 'migrations')});
+
   dbInstance = {
     insert: insert.bind(null, db),
     update: update.bind(null, db),
