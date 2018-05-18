@@ -1,16 +1,17 @@
 import nodemailer from 'nodemailer';
 
+console.log(process.env.RESTRO2018);
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587,
+  port: 465,
   secure: true,
   auth: {
-    user: 'restro.net@gmail.com',
-    pass: 'Restro123*#',
+    user: 'restro2018@gmail.com',
+    pass: process.env.RESTRO2018,
   },
 });
 
 export default async function mailer(options) {
   return transporter.sendMail(options);
 }
-

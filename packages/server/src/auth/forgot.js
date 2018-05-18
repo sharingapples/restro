@@ -3,7 +3,7 @@ import db from '../db';
 import cache from '../cache';
 import mailer from '../mailer';
 
-const RESET_TOKEN_AGE = 3 * 60 * 60 * 1000; // 3 hours
+const RESET_TOKEN_AGE = 1 * 60 * 60 * 1000; // 1 hour
 
 export default async function forgot(username) {
   // First get the user email from database
@@ -14,14 +14,17 @@ export default async function forgot(username) {
   }
 
   const resetToken = uuid();
+  console.log('Reset Token is', resetToken);
 
   // Include a reset token on cache
   cache.users.set(resetToken, user.id, RESET_TOKEN_AGE);
 
+  console.log('Send reset email to', user);
+
   // Send an email with a link to reset the password
   mailer({
     from: 'Restro.net <noreply@restro.net>',
-    to: user.email,
+    to: user.username,
     subject: 'Password reset',
     text: `Password reset token is ${resetToken}`,
   });

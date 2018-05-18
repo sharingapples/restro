@@ -1,10 +1,10 @@
-export default function validateToken(authId) {
-  if (!authId) {
-    throw new Error('Invalid authentication token');
+import cache from '../cache';
+
+export default function validateToken(token) {
+  const user = cache.users.get(token);
+  if (!user) {
+    throw new Error('Invalid token');
   }
 
-  return {
-    id: 'tmp',
-    name: 'Temp User',
-  };
+  return user;
 }
