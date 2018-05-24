@@ -7,8 +7,11 @@ export default async function update(db, table, values, condition) {
   const conditionStr = conditionFields.map(c => `[${c}]=?`).join(' AND ');
   const conditionParams = conditionFields.map(c => condition[c]);
 
+
   const sql = `UPDATE [${table}] SET ${set} WHERE ${conditionStr}`;
+  console.log('sql string',sql,...fieldParams,...conditionParams);
   const res = await db.run(sql, ...fieldParams, ...conditionParams);
+
   return res.changes;
 }
 

@@ -7,6 +7,7 @@ import find from './find';
 import findOne from './findOne';
 import update from './update';
 import exec from './exec';
+import deleteAllById from './deleteAllById';
 import query from './query';
 
 export const dbPromise = sqlite.open('restro.sqlite', { Promise });
@@ -27,11 +28,11 @@ async function getInstance() {
     update: update.bind(null, db),
     find: find.bind(null, db),
     findOne: findOne.bind(null, db),
-    delete: deleteQuery.bind(null, db),
+    deleteQuery: deleteQuery.bind(null, db),
     exec: exec.bind(null, db),
     query: query.bind(null, db),
+    deleteAllById: deleteAllById.bind(null, db),
   };
-
   return dbInstance;
 }
 

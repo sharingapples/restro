@@ -8,7 +8,7 @@ const SESSION_AGE = 7 * 86400 * 1000; // Session duration of 1 week
 
 export default async function login(username, password) {
   return db.execute(async ({ findOne }) => {
-    const record = await findOne('users', { username });
+    const record = await findOne('RestaurantUser', { username });
 
     // Check if the passowrd is correct
     if (!record || !check(password, record.password)) {
