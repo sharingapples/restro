@@ -2,11 +2,16 @@ import express from 'express';
 import http from 'http';
 import axios from 'axios';
 import appExpress from '../src/express';
+import addUser from '../src/api/admin/addUser';
+import addItem from '../src/api/admin/addItem';
+import addMenuItem from '../src/api/admin/addMenuItem';
+import addTable from '../src/api/admin/addTable';
+
 
 const app = express();
 const server = http.createServer(app);
-appExpress(app);
 
+appExpress(app);
 const port = 5001;
 server.listen(port);
 
@@ -29,6 +34,8 @@ describe('It checks the server for authentication api', () => {
     const res = await axios.get(`http://localhost:${port}/auth/forgot?username=bhagyasah4u@gmail.com`);
     console.log(res.data);
 
-
   });
 });
+
+
+

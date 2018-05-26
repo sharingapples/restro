@@ -13,7 +13,7 @@ export default async function resetPassword(resetToken, newPassword) {
   const password = hash(newPassword);
   console.log('Hashed password', password);
 
-  await db.execute(({ update }) => update('users', { password }, { id: userId }));
+  await db.execute(({ update }) => update('RestaurantUser', { password }, { id: userId }));
 
   // Clear the token once used
   cache.users.del(resetToken);
