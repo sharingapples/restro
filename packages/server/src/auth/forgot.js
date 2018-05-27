@@ -14,12 +14,12 @@ export default async function forgot(username) {
   }
 
   const resetToken = uuid();
-  console.log('Reset Token is', resetToken);
+  // console.log('Reset Token is', resetToken);
 
   // Include a reset token on cache
   cache.users.set(resetToken, user.id, RESET_TOKEN_AGE);
 
-  console.log('Send reset email to', user);
+  // console.log('Send reset email to', user);
 
   // Send an email with a link to reset the password
   mailer({

@@ -1,9 +1,9 @@
 import cache from '../cache';
 
-export default async function validateToken(token) {
+export default function validateToken(token) {
   const user = cache.users.get(token);
   if (!user) {
-    throw new Error('Invalid token');
+    throw new Error(`Invalid token ${token}`);
   }
 
   return user;
