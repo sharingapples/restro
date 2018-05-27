@@ -6,3 +6,4 @@ lerna-debug.log
 npm-debug.log
 
 restro.sqlite
+restro.sqlite.db
