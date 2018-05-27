@@ -1,0 +1,16 @@
+{
+  "name": "restro-printer",
+  "version": "0.1.0",
+  "description": "Print server",
+  "main": "cjs/index.js",
+  "scripts": {
+    "build": "../../node_modules/.bin/babel src -d cjs"
+  },
+  "author": "Ranjan Shrestha",
+  "license": "MIT",
+  "dependencies": {
+    "node-thermal-printer": "^2.0.0",
+    "shocked-client": "^0.2.7",
+    "ws": "^5.2.0"
+  }
+}

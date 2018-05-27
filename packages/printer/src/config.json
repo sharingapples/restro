@@ -1,0 +1,5 @@
+{
+  "type": "epson",
+  "interface": "COM5",
+  "width": 40
+}
