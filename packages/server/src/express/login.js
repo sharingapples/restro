@@ -6,6 +6,7 @@ export default async function (req, res) {
     const user = await login(username, password);
     res.send(JSON.stringify(user));
   } catch (err) {
+    console.error(err);
     res.status(500);
     res.send(err.message);
   }
