@@ -39,6 +39,5 @@ export default function createItemTree({ Category, Item, MenuItem }) {
       })),
     })).sort((a, b) => compareString(a.title, b.title)),
   }));
-  console.log(cats);
   return cats;
 }
