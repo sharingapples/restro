@@ -1,29 +1,53 @@
 import express from 'express';
 import http from 'http';
-import start from 'redsock';
+import start from 'shocked';
+import run from 'app-node';
 
+import { switchRestro } from './api';
+
+import { init as initDb } from './db';
 import authExpress from './express';
 
 import { validateToken } from './auth';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const app = express();
 const server = http.createServer(app);
 
-// // Start the websocket server
-start({ server, url: '/redsock/:origin/:token' }, async (session) => {
-  // Check if its a valid user
-  console.log(session.params.origin);
+run(async (nodeApp) => {
+  const url = '/shocked/:origin/:token';
 
-  const user = await validateToken(session.params.token);
-  session.set('user', user);
+  // Make sure the database is initialized
+  await initDb();
 
-  // Based on the type of the user, join specific channels
+  const socket = start({ server, url }, async (session) => {
+    try {
+      const user = validateToken(session.params.token);
+      session.set('user', user);
+
+      // Switch Restro
+      await switchRestro.call({ session }, user.restros[0].id);
+
+      // dispatch login
+      session.dispatch({ type: 'LOGIN', payload: user });
+      return true;
+    } catch (err) {
+      console.error(err);
+      session.dispatch({ type: 'LOGOUT' });
+      return false;
+    }
+  });
+
+  // Setup authentication route
+  authExpress(app);
+
+  // Start listening for http reuqest
+  server.listen(port);
+
+  // Setup exit
+  nodeApp.addExitHandler(() => {
+    socket.stop();
+    server.close();
+  });
 });
-
-// Register all http routes required by the app
-authExpress(app);
-
-// Start the http server
-server.listen(port);
