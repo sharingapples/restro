@@ -7,7 +7,7 @@ const RESET_TOKEN_AGE = 1 * 60 * 60 * 1000; // 1 hour
 
 export default async function forgot(username) {
   // First get the user email from database
-  const user = await db.execute(({ findOne }) => findOne('users', { username }));
+  const user = await db.execute(({ findOne }) => findOne('User', { username }));
 
   if (!user) {
     throw new Error('Unknown username');
