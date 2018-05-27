@@ -1,10 +1,11 @@
 import LRU from 'lru-cache';
+import restro from './restro';
 
-const userOptions = {
+const users = LRU({
   max: 100,
-};
+});
 
-const users = LRU(userOptions);
+export { restro };
 
 export default {
   users,
