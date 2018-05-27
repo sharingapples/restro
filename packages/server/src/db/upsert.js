@@ -4,9 +4,7 @@ export default async function insert(db, table, values) {
   const fieldPlaceHolders = fields.map(() => '?').join(',');
   const params = fields.map(f => values[f]);
 
-  const sql = `INSERT INTO [${table}](${fieldNames}) VALUES(${fieldPlaceHolders})`;
+  const sql = `INSERT OR REPLACE INTO [${table}](${fieldNames}) VALUES(${fieldPlaceHolders})`;
   const res = await db.run(sql, ...params);
-
-  // console.log('INSERT RESULT', res.stmt);
-  return res.stmt.lastID;
+  return res.lastId;
 }

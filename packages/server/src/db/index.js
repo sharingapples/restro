@@ -35,6 +35,10 @@ async function getInstance() {
   return dbInstance;
 }
 
+export async function init() {
+  await getInstance();
+}
+
 export default {
   execute: async (func) => {
     const db = await getInstance();
