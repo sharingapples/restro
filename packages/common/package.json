@@ -1,0 +1,17 @@
+{
+  "name": "restro-common",
+  "version": "0.1.0",
+  "description": "Common code base for restro",
+  "main": "index.js",
+  "files": [
+    "actions",
+    "schema"
+  ],
+  "scripts": {
+    "build:schema": "../../node_modules/.bin/babel src/schema -d schema",
+    "build:actions": "../../node_modules/.bin/babel src/actions -d actions",
+    "build": "npm run build:schema && npm run build:actions"
+  },
+  "author": "Ranjan Shrestha",
+  "license": "MIT"
+}
