@@ -7,8 +7,8 @@ import { check } from './_password';
 const SESSION_AGE = 7 * 86400 * 1000; // Session duration of 1 week
 
 export default async function login(username, password) {
-  return db.execute(async ({ findOne }) => {
-    const record = await findOne('users', { username });
+  return db.execute(async ({ findOne, query }) => {
+    const record = await findOne('User', { username });
 
     // Check if the passowrd is correct
     if (!record || !check(password, record.password)) {
@@ -18,14 +18,23 @@ export default async function login(username, password) {
     // Create a user object to respond with
     const token = uuid();
     const user = {
+      id: record.id,
       username,
       name: record.name,
-      role: record.role,
       token,
     };
 
+    // Retrieve all the restros accesible to this user
+    const restros = await query(
+      `SELECT Restro.id, Restro.name, Restro.vat, Restro.serviceCharge, RestroUser.role FROM Restro
+        INNER JOIN RestroUser
+          ON RestroUser.restroId = Restro.id AND RestroUser.userId=?`,
+      record.id
+    );
+    user.restros = restros;
+
     // Set the user cache with the database record
-    cache.users.set(token, record, SESSION_AGE);
+    cache.users.set(token, user, SESSION_AGE);
 
     return user;
   });
