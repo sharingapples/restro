@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setTitle } from 'restro-common/actions';
 import schema from 'restro-common/schema';
 import numeral from 'numeral';
-import { BrowserRouter } from 'react-router-dom'
 
 import { Button } from '@blueprintjs/core';
 
