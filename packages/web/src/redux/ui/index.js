@@ -1,3 +1,5 @@
-import uiReducer from './uiReducer';
+import reducer from './uiReducer';
 
-export const reducer = uiReducer;
+export {
+  reducer;
+}
