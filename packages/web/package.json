@@ -19,6 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "rimraf ../server/build/public && mv build ../server/build/public",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
