@@ -1,6 +1,6 @@
 import db from '../db';
 
-import { check } from './_password';
+import { check, hash } from './_password';
 
 export default async function changePassword(userId, oldPassword, newPassword) {
   return db.execute(async ({ update, findOne }) => {
@@ -9,7 +9,8 @@ export default async function changePassword(userId, oldPassword, newPassword) {
       throw new Error('Invalid password');
     }
 
+    const password = hash(newPassword);
     // Change the password
-    await update('User', { password: newPassword }, { id: userId });
+    await update('User', { password }, { id: userId });
   });
 }
