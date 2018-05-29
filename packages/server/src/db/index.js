@@ -20,7 +20,7 @@ async function getInstance() {
 
   const db = await dbPromise;
 
-  await db.migrate({ migrationsPath: path.resolve(__dirname, 'migrations')});
+  await db.migrate({ migrationsPath: path.resolve(__dirname, 'migrations') });
 
   dbInstance = {
     insert: insert.bind(null, db),

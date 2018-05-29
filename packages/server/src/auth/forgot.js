@@ -5,6 +5,8 @@ import mailer from '../mailer';
 
 const RESET_TOKEN_AGE = 1 * 60 * 60 * 1000; // 1 hour
 
+const domain = process.env.RESTRO_DOMAIN || 'https://restro.net/';
+
 export default async function forgot(username) {
   // First get the user email from database
   const user = await db.execute(({ findOne }) => findOne('User', { username }));
@@ -26,6 +28,6 @@ export default async function forgot(username) {
     from: 'Restro.net <noreply@restro.net>',
     to: user.username,
     subject: 'Password reset',
-    text: `Password reset token is ${resetToken}`,
+    text: `Please use the following link to reset your password ${domain}/reset/${resetToken}`,
   });
 }

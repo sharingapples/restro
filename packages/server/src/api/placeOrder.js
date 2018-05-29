@@ -1,6 +1,5 @@
 import schema from 'restro-common/schema';
 import db from '../db';
-import restroCache from '../cache/restro';
 
 export default async function placeOrder(tableId, items) {
   const { session } = this;
@@ -10,11 +9,10 @@ export default async function placeOrder(tableId, items) {
   console.log('Restro is', restro.org, tableId, items);
 
   const table = restro.tables.find(t => t.id === tableId);
-  const org = restro.org;
 
 
-  const orderItems = await db.execute(async ({ insert, findOne }) => {
-    const activeOrder = table.activeOrder;
+  const orderItems = await db.execute(async ({ insert }) => {
+    const { activeOrder } = table;
 
     if (!activeOrder) {
       table.activeOrder = {
@@ -22,8 +20,8 @@ export default async function placeOrder(tableId, items) {
           tableId,
           status: 'Active',
           discount: 0,
-          vat: org.vat,
-          serviceCharge: org.serviceCharge,
+          vat: restro.org.vat,
+          serviceCharge: restro.org.serviceCharge,
         }),
         items: [],
       };
@@ -32,6 +30,7 @@ export default async function placeOrder(tableId, items) {
     console.log('Order ID', table.activeOrder);
 
     return Promise.all(items.map(async (item) => {
+      // eslint-disable-next-line eqeqeq
       const menuItem = restro.menuItems.find(m => m.id == item.id);
       const rate = menuItem.price;
 
@@ -59,7 +58,9 @@ export default async function placeOrder(tableId, items) {
 
   // Segregate items by category
   const seggregated = orderItems.reduce((res, orderItem) => {
+    // eslint-disable-next-line eqeqeq
     const menuItem = restro.menuItems.find(m => m.id == orderItem.menuItemId);
+    // eslint-disable-next-line eqeqeq
     const item = restro.items.find(i => i.id == menuItem.itemId);
 
     if (!res[item.categoryId]) {

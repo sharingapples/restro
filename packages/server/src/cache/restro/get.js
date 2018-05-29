@@ -75,15 +75,12 @@ export default async function get(id) {
       items,
       menuItems,
       tables,
-
-      placeOrder: placeOrder.bind(null, r),
     };
 
-    console.log('Restro is', r.org);
+    r.placeOrder = placeOrder.bind(null, r);
     return r;
   });
 
-  console.log('Setting up cache with restro', restro.org);
   // Setup the cache
   restros.set(id, restro);
 

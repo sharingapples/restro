@@ -15,6 +15,8 @@ const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 
+console.log(`Starting server at port ${port}`);
+
 run(async (nodeApp) => {
   const url = '/shocked/:origin/:token';
 
@@ -22,21 +24,30 @@ run(async (nodeApp) => {
   await initDb();
 
   const socket = start({ server, url }, async (session) => {
-    try {
-      const user = validateToken(session.params.token);
-      session.set('user', user);
+    const { origin, token } = session.params;
 
-      // Switch Restro
-      await switchRestro.call({ session }, user.restros[0].id);
+    if (origin === 'web') {
+      try {
+        const user = validateToken(token);
+        session.set('user', user);
 
-      // dispatch login
-      session.dispatch({ type: 'LOGIN', payload: user });
+        // Switch Restro
+        await switchRestro.call({ session }, user.restros[0].id);
+
+        // dispatch login
+        session.dispatch({ type: 'LOGIN', payload: user });
+        return true;
+      } catch (err) {
+        console.error(err);
+        session.dispatch({ type: 'LOGOUT' });
+        return false;
+      }
+    } else if (origin === 'printer') {
+      session.subscribe('BILL_PRINTER');
       return true;
-    } catch (err) {
-      console.error(err);
-      session.dispatch({ type: 'LOGOUT' });
-      return false;
     }
+
+    return false;
   });
 
   // Setup authentication route

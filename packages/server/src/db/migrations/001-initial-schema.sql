@@ -11,8 +11,13 @@ CREATE TABLE User (
 );
 
 -- Create a super user by default
-INSERT INTO User (id, username, password, name, type)
-  VALUES (1, 'ranjan.newa@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Ranjan Shrestha', 'Super');
+INSERT OR REPLACE INTO User (id, username, password, name, type) VALUES
+  (1, 'ranjan.newa@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Ranjan Shrestha', 'Super'),
+  (2, 'amitadhikari26@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Amit Adhikari', 'Restro'),
+  (3, 'fudocafeanil@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Anil Shrestha', 'Restro'),
+  (4, 'kushal@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Kushal Adhikari', 'Restro'),
+  (5, 'rojina.shrestha@gmail.com', '$2a$10$DD6zda4qajdMwB/QrDn9QuW.WllpsCowOScMVmZOyqxXw1/1xBfK2', 'Rojina Shrestha', 'Restro');
+
 
 CREATE TABLE Restro (
   id INTEGER PRIMARY KEY,
@@ -23,8 +28,7 @@ CREATE TABLE Restro (
   CONSTRAINT Restro_uk_name UNIQUE (name)
 );
 
-INSERT INTO Restro (id, name, vat, serviceCharge)
-  VALUES (1, 'Fudo Cafe', 0.13, 0.1);
+INSERT INTO Restro (id, name, vat, serviceCharge) VALUES (1, 'Fudo Cafe', 0.13, 0.1);
 
 CREATE TABLE RestroUser (
   id INTEGER PRIMARY KEY,
@@ -40,8 +44,12 @@ CREATE TABLE RestroUser (
 CREATE INDEX RestroUser_ix_restroId ON RestroUser(restroId);
 CREATE INDEX RestroUser_ix_userId ON RestroUser(userId);
 
-INSERT INTO RestroUser(id, restroId, userId, role)
-  VALUES(1, 1, 1, 'Admin');
+INSERT OR REPLACE INTO RestroUser(id, restroId, userId, role) VALUES
+  (1, 1, 1, 'Admin'),
+  (2, 1, 2, 'Admin'),
+  (3, 1, 3, 'Waiter'),
+  (4, 1, 4, 'Waiter'),
+  (5, 1, 5, 'Cashier');
 
 CREATE TABLE Category (
   id INTEGER PRIMARY KEY,

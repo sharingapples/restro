@@ -1,14 +1,12 @@
 import nodemailer from 'nodemailer';
 
-console.log(process.env.RESTRO2018);
-
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  host: process.env.RESTRO_MAILER_HOST,
+  port: process.env.RESTRO_MAILER_PORT,
+  secure: process.env.RESTRO_MAILER_SECURE,
   auth: {
-    user: 'restro2018@gmail.com',
-    pass: process.env.RESTRO2018,
+    user: process.env.RESTRO_MAILER_EMAIL,
+    pass: process.env.RESTRO_MAILER_PASSWORD,
   },
 });
 
