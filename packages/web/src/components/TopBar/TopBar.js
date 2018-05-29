@@ -11,7 +11,6 @@ import ChangePassword from '../ChangePassword';
 
 type Props = {
   userName: string,
-  role: string,
 };
 
 class TopBar extends Component<Props> {
@@ -30,7 +29,7 @@ class TopBar extends Component<Props> {
   }
 
   logout = async () => {
-    const scope = await client.scope(this.props.role);
+    const scope = await client.scope('General');
     await scope.logout();
   }
 
@@ -86,7 +85,6 @@ class TopBar extends Component<Props> {
 
 const mapStateToProps = ({ account }) => ({
   userName: account.user.name,
-  role: account.user.restros[0].role,
 });
 
 export default connect(mapStateToProps)(TopBar);

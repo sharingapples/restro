@@ -5,7 +5,6 @@ import { FormGroup, Classes, Button, Intent } from '@blueprintjs/core';
 import client from '../../socket';
 
 type Props = {
-  role: string,
   onClose: () => {},
 };
 
@@ -20,7 +19,7 @@ class ChangePassword extends Component<Props> {
 
   onChange = async () => {
     const { oldP, newP } = this.state;
-    const scope = await client.scope(this.props.role);
+    const scope = await client.scope('General');
     try {
       await scope.changePassword(oldP, newP);
       this.props.onClose();
