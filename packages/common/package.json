@@ -1,5 +1,6 @@
 {
   "name": "restro-common",
+  "private": true,
   "version": "0.1.0",
   "description": "Common code base for restro",
   "main": "index.js",

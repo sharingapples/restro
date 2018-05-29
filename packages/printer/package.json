@@ -1,6 +1,7 @@
 {
   "name": "restro-printer",
   "version": "0.1.0",
+  "private": true,
   "description": "Print server",
   "main": "cjs/index.js",
   "scripts": {
