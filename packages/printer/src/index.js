@@ -24,7 +24,7 @@ client.on('BILL_PRINT', (data) => {
       { id: 'qty', text: 'Qty', width: 0.1, align: 'CENTER' },
       { id: 'amount', text: 'Amt', width: 0.15, align: 'RIGHT' },
     ],
-    items:  data.items.map((item, idx) => ({
+    items: data.items.map((item, idx) => ({
       sn: idx + 1,
       item: item.name,
       rate: item.rate,
