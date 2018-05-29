@@ -1,12 +1,15 @@
 /* global window */
 import store from '../redux';
 
+const protocol = process.env.REACT_APP_SOCKET_PROTOCOL || window.location.protocol === 'https' ? 'wss' : 'ws';
+const host = process.env.REACT_APP_SOCKET_HOST || window.location.hostname;
+const port = process.env.REACT_APP_SOCKET_PORT || window.location.port;
+
 export default function getRemoteUrl() {
   const { sessionId } = store.getState().account;
-  console.log('SessionId', sessionId, store.getState());
   if (!sessionId) {
     return null;
   }
 
-  return `${process.env.REACT_APP_SOCKET_PROTOCOL}://${process.env.REACT_APP_SOCKET_HOST || window.location.hostname}:${process.env.REACT_APP_SOCKET_PORT}/shocked/web/${sessionId}`;
+  return `${protocol}://${host}:${port}/shocked/web/${sessionId}`;
 }
