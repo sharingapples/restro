@@ -1,6 +1,6 @@
 {
   "presets": [
-    "env", "import-export"
+    "import-export"
   ],
   "plugins": [
     "transform-object-rest-spread"
