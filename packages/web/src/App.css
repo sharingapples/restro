@@ -1,7 +1,10 @@
-@import "~@blueprintjs/core/lib/css/blueprint.css";
-
 .App {
   text-align: center;
+  background-color: #eee;
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  padding-Top: 50px;
 }
 
 .App-logo {
@@ -27,4 +30,14 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.waiter-menu {
+  width: 100%;
+  text-align: center;
+}
+
+.waiter-menu-items {
+  display: flex;
+  flex: 1;
 }

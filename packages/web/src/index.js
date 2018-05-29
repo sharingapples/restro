@@ -1,5 +1,8 @@
+/* globals document */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './socket';
+
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';

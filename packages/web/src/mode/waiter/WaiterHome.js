@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import TableIcon from './TableIcon';
 import schema from 'restro-common/schema';
+import TableIcon from './TableIcon';
 import { Consumer } from '../../App';
 
 type Table = {

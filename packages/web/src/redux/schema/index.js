@@ -1,5 +1,4 @@
 import reducer from './reducer';
 
-export {
-  reducer,
-};
+// eslint-disable-next-line
+export { reducer };

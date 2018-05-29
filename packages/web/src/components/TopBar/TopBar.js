@@ -1,22 +1,25 @@
+// @flow
 import React, { Component } from 'react';
-import { Navbar, Alignment } from '@blueprintjs/core';
+import { Navbar, Alignment, Popover, Menu, MenuItem, MenuDivider, Overlay } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import logo from '../../logo.svg';
-import store from '../../redux';
 
+import client from '../../socket';
 import { Consumer } from '../../App';
 
-class TopBar extends Component {
+import ChangePassword from '../ChangePassword';
+
+type Props = {
+  userName: string,
+  role: string,
+};
+
+class TopBar extends Component<Props> {
   state = {
     title: 'Restro.NET',
     button: null,
+    showChangePassword: false,
   }
-
-  onLogout = () => {
-    console.log('Clicked');
-    store.dispatch({ type: 'LOGOUT' });
-  }
-
 
   setTitle = (title) => {
     this.setState({ title });
@@ -26,10 +29,22 @@ class TopBar extends Component {
     this.setState({ button });
   }
 
+  logout = async () => {
+    const scope = await client.scope(this.props.role);
+    await scope.logout();
+  }
+
+  changePassword = () => {
+    this.setState({ showChangePassword: true });
+  }
+
+  hideChangePassword = () => {
+    this.setState({ showChangePassword: false });
+  }
 
   render() {
-    const { user } = this.props;
-    const { title, button } = this.state;
+    const { userName } = this.props;
+    const { title, button, showChangePassword } = this.state;
 
     return (
       <Consumer>
@@ -44,7 +59,22 @@ class TopBar extends Component {
                 { button }
               </Navbar.Group>
               <Navbar.Group align={Alignment.RIGHT}>
-                <div>{ user }</div>
+                <Popover>
+                  <div>{ userName }</div>
+                  <Menu>
+                    <MenuItem text="Change Password" onClick={this.changePassword} />
+                    <MenuDivider />
+                    <MenuItem text="Logout" onClick={this.logout} />
+                  </Menu>
+                </Popover>
+                <Overlay
+                  isOpen={showChangePassword}
+                  onClose={this.hideChangePassword}
+                  hasBackdrop={false}
+                  transitionDuration={0}
+                >
+                  <ChangePassword onClose={this.hideChangePassword} />
+                </Overlay>
               </Navbar.Group>
             </Navbar>
           );
@@ -54,9 +84,9 @@ class TopBar extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, account }) => ({
-  title: ui.title || 'Restro.NET',
-  user: account.user.name,
+const mapStateToProps = ({ account }) => ({
+  userName: account.user.name,
+  role: account.user.restros[0].role,
 });
 
 export default connect(mapStateToProps)(TopBar);

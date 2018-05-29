@@ -21,10 +21,12 @@ const styles = {
 };
 
 type Props = {
+  id: string,
   number: string,
   status: 'Available' | 'Active',
 };
 
+// eslint-disable-next-line react/prefer-stateless-function
 class TableIcon extends Component<Props> {
   render() {
     const { id, number, status } = this.props;
@@ -32,7 +34,7 @@ class TableIcon extends Component<Props> {
     return (
       // eslint-disable-next-line
       <Link to={`/table/${id}`}>
-        <div style={{...styles.container, backgroundColor: statusColor}}>
+        <div style={{ ...styles.container, backgroundColor: statusColor }}>
           <span style={styles.number}>{number}</span>
         </div>
       </Link>

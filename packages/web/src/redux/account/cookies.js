@@ -21,5 +21,5 @@ export default {
 
   clear: (cookie) => {
     document.cookie = `${cookie}= ;expires=${(new Date(Date.now() - 1)).toUTCString()}`;
-  }
-}
+  },
+};

@@ -1,90 +1,24 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ButtonGroup, Button, Intent, Alignment, Popover } from '@blueprintjs/core';
+import { ButtonGroup, Button, Intent, Popover } from '@blueprintjs/core';
 import numeral from 'numeral';
 
-import colors from './colors';
+import Group from './Group';
+import Item from './Item';
+
 import './menu.css';
 import createItemTree from './_createItemTree';
 
-const Group = ({ idx, text, onClick, active }) => {
-  const color = colors[idx % colors.length];
-  return (
-    <Button
-      alignText={Alignment.LEFT}
-      fill
-      style={{
-        color: 'white',
-        backgroundImage: 'none',
-        boxShadow: 'none',
-        backgroundColor: color,
-        border: `3px solid ${color}`,
-        borderColor: active ? 'black' : color,
-        margin: '2px',
-        padding: '8px',
-        borderRadius: '5px',
-        overflow: 'hidden',
-      }}
-      onClick={onClick}
-    >
-      <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}</div>
-    </Button>
-  );
+type Props = {
+  categories: Array<{}>,
+  onConfirm: (Array<{}>) => {},
 }
 
-const Item = ({ grpIdx, text, onIncrease, onDecrease, qty }) => {
-  const color = colors[grpIdx % colors.length];
-  return (
-    <Button
-      onClick={onIncrease}
-      alignText={Alignment.CENTER}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        color: 'white',
-        backgroundColor: color,
-        backgroundImage: 'none',
-        margin: '2px',
-        padding: '4px',
-        borderRadius: '10px',
-        height: '70px',
-        width: '70px',
-        textAlign: 'center',
-      }}
-    >
-      <span style={{ fontSize: '13px' }}>{text}</span>
-      {!!qty &&
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            right: '3px',
-            bottom: '3px',
-            width: '16px',
-            height: '16px',
-            borderRadius: '8px',
-            backgroundColor: 'black',
-            boxShadow: 'none',
-            backgroundImage: 'none',
-            color: 'white',
-            fontSize: '9px',
-          }}
-        >
-          {qty}
-        </div>
-      }
-    </Button>
-  );
-};
-
-class Menu extends Component {
+class Menu extends Component<Props> {
   state = {
     selectedCatIdx: 0,
-    selectedGroups: this.props.categories.map(cat => 0),
+    selectedGroups: this.props.categories.map(() => 0),
     chosenItems: {},
   };
 
@@ -97,14 +31,15 @@ class Menu extends Component {
     const selectedGroup = selectedCat.groups[selectedGroupIdx];
     const menuItems = selectedGroup.items;
 
-    const allItems = categories.reduce((res, cat) => {
-      return cat.groups.reduce((r, grp) => {
-        return grp.items.reduce((rr, item) => {
+    const allItems = categories.reduce((res, cat) => (
+      cat.groups.reduce((r, grp) => (
+        grp.items.reduce((rr, item) => {
+          // eslint-disable-next-line no-param-reassign
           rr[item.id] = item;
           return rr;
-        }, r);
-      }, res);
-    }, {});
+        }, r)
+      ), res)
+    ), {});
 
     const increase = id => () => {
       const chosen = Object.assign({}, chosenItems);
@@ -139,7 +74,15 @@ class Menu extends Component {
           </ButtonGroup>
         </div>
         <div style={{ display: 'flex', flex: 3 }}>
-          <div style={{ display: 'flex', flex: 1, padding: '3px', flexDirection: 'column', overflowY: 'scroll' }}>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              padding: '3px',
+              flexDirection: 'column',
+              overflowY: 'scroll',
+            }}
+          >
             {selectedCat.groups.map((grp, idx) => (
               <Group
                 key={grp.id}
@@ -160,7 +103,7 @@ class Menu extends Component {
               flexWrap: 'wrap',
               alignContent: 'flex-start',
               justifyContent: 'space-around',
-              overflowY: 'scroll'
+              overflowY: 'scroll',
             }}
           >
             {menuItems.map(item => (
@@ -203,7 +146,7 @@ class Menu extends Component {
                   key={item.id}
                   position="top"
                   transitionDuration={0}
-                  modifiers={{ preventOverflow: { boundariesElement: 'window' }}}
+                  modifiers={{ preventOverflow: { boundariesElement: 'window' } }}
                 >
                   <div
                     style={{
@@ -220,7 +163,7 @@ class Menu extends Component {
                   >
                     {item.title} - {qty}
                   </div>
-                  <div style={{ padding: '8px', textAlign: 'center'}}>
+                  <div style={{ padding: '8px', textAlign: 'center' }}>
                     <h4>{item.title}</h4>
                     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', minWidth: '150px' }}>
                       <Button onClick={decrease(item.id)} large text="-" intent={Intent.DANGER} />
@@ -240,7 +183,9 @@ class Menu extends Component {
             <Button
               active={Object.keys(chosenItems).length > 0}
               onClick={async () => {
-                await this.props.onConfirm(Object.keys(chosenItems).map(id => ({ id, qty: chosenItems[id] })));
+                await this.props.onConfirm(Object.keys(chosenItems).map(id => ({
+                  id, qty: chosenItems[id],
+                })));
                 this.setState({
                   chosenItems: {},
                 });

@@ -1,3 +1,5 @@
+import { login, logout } from 'restro-common/actions';
+
 import Cookie from './cookies';
 
 const INITIAL_STATE = {
@@ -18,13 +20,13 @@ const reducer = () => (state = INITIAL_STATE, action) => {
         user: null,
       };
 
-    case 'LOGIN':
+    case login.TYPE:
       return {
         ...state,
         user: action.payload,
       };
 
-    case 'LOGOUT':
+    case logout.TYPE:
       return {
         ...state,
         user: null,
@@ -46,6 +48,7 @@ const reducer = () => (state = INITIAL_STATE, action) => {
     default:
       return state;
   }
-}
+};
 
+// eslint-disable-next-line
 export { reducer };

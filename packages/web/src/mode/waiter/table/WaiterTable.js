@@ -1,3 +1,5 @@
+/* global window */
+// @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import schema from 'restro-common/schema';
@@ -10,7 +12,14 @@ import { Consumer } from '../../../App';
 import Menu from './Menu';
 import client from '../../../socket';
 
-class WaiterTable extends Component {
+type Props = {
+  getMenuItem: () => {},
+  table: {
+    id: string,
+  }
+}
+
+class WaiterTable extends Component<Props> {
   placeOrder = async (items) => {
     const waiter = await client.scope('Waiter');
     console.log(waiter, this.props.table);
@@ -24,45 +33,45 @@ class WaiterTable extends Component {
 
     return (
       <Consumer>
-      {(app) => {
-        const bar = app.getTopBar();
-        bar.setTitle(`Table ${tbl.number}`);
-        bar.setActionButton(
-          <Button onClick={() => window.history.back()}>Cancel</Button>
-        );
+        {(app) => {
+          const bar = app.getTopBar();
+          bar.setTitle(`Table ${tbl.number}`);
+          bar.setActionButton((
+            <Button onClick={() => window.history.back()}>Cancel</Button>
+          ));
 
-        return (
-          <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-            <div style={{ display: 'flex', flex: 2, padding: '5px' }}>
-              <Menu onConfirm={this.placeOrder} />
-            </div>
-            <div style={{ display: 'flex', flex: 1, padding: '5px', overflowY: 'scroll' }}>
-              <table className="pt-html-table pt-small" style={{ width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th>SN</th>
-                    <th>Item ({tbl.items.length})</th>
-                    <th>Qty</th>
-                    <th>Rate</th>
-                    <th>{numeral(tbl.items.reduce((res, itm) => res + (itm.qty * itm.rate), 0)).format('0,0.00') }</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tbl.items.map((itm, idx) => (
-                    <tr key={itm.id}>
-                      <td>{idx + 1}</td>
-                      <td>{getMenuItem(itm.menuItemId).name}</td>
-                      <td>{numeral(itm.qty).format('0')}</td>
-                      <td>{numeral(itm.rate).format('0,0.00')}</td>
-                      <td>{numeral(itm.qty * itm.rate).format('0,0.00')}</td>
+          return (
+            <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+              <div style={{ display: 'flex', flex: 2, padding: '5px' }}>
+                <Menu onConfirm={this.placeOrder} />
+              </div>
+              <div style={{ display: 'flex', flex: 1, padding: '5px', overflowY: 'scroll' }}>
+                <table className="pt-html-table pt-small" style={{ width: '100%' }}>
+                  <thead>
+                    <tr>
+                      <th>SN</th>
+                      <th>Item ({tbl.items.length})</th>
+                      <th>Qty</th>
+                      <th>Rate</th>
+                      <th>{numeral(tbl.items.reduce((res, itm) => res + (itm.qty * itm.rate), 0)).format('0,0.00') }</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {tbl.items.map((itm, idx) => (
+                      <tr key={itm.id}>
+                        <td>{idx + 1}</td>
+                        <td>{getMenuItem(itm.menuItemId).name}</td>
+                        <td>{numeral(itm.qty).format('0')}</td>
+                        <td>{numeral(itm.rate).format('0,0.00')}</td>
+                        <td>{numeral(itm.qty * itm.rate).format('0,0.00')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        );
-      }}
+          );
+        }}
       </Consumer>
     );
   }
@@ -80,9 +89,8 @@ const mapStateToProps = ({ database }, ownProps) => {
 
   return {
     table: schema.get(database.Table, id),
-    getMenuItem: id => schema.get(database.MenuItem, id),
+    getMenuItem: itemId => schema.get(database.MenuItem, itemId),
   };
 };
 
 export default connect(mapStateToProps)(WaiterTable);
-

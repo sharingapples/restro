@@ -1,15 +1,9 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb",
   "rules": {
-    "no-multi-spaces": ["error", { "ignoreEOLComments": true }],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "never"
-    }],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+    "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": [ ],
+      "specialLink": [ "hrefLeft", "hrefRight" ],
+      "aspects": [ "noHref", "invalidHref", "preferButton" ]
+    }]
   }
 }
