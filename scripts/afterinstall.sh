@@ -17,5 +17,5 @@ yarn run build
 
 # Remove source maps from the build
 cd /home/ec2-user/restro/packages/server/build/public
-rm -- **/*.map
+find . -type f -name '*.map' -exec rm {} +
 
