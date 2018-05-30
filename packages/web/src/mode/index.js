@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Auth from './auth';
 import Waiter from './waiter';
@@ -33,10 +34,12 @@ const Mode = ({ mode }: Props) => {
 
   return (
     <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <div>
-        <img src={logo} style={{ width: '150px' }} alt="Logo" />
-        <h2>Restro.NET</h2>
-      </div>
+      <a href="/">
+        <div>
+          <img src={logo} style={{ width: '150px' }} alt="Logo" />
+          <h2>Restro.NET</h2>
+        </div>
+      </a>
     </div>
   );
 };
