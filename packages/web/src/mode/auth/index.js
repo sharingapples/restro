@@ -20,7 +20,7 @@ const Auth = () => (
     >
       <img src={logo} style={{ width: '100px' }} alt="logo" />
       <h4>Restro.NET</h4>
-      <Route exact path="/" component={Login} />
+      <Route path="/" component={Login} />
       <Route path="/forgot" component={ForgotPassword} />
       <Route path="/reset/:token" component={ResetPassword} />
     </div>
