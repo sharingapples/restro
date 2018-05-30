@@ -11,4 +11,7 @@ export default function (app) {
   app.get('/auth/forgot', forgotPassword);
 
   app.use(express.static(path.resolve(__dirname, '..', 'public')));
+  app.get('/table/:id', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
+  });
 }
