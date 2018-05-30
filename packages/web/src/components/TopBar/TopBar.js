@@ -1,3 +1,4 @@
+/* global window */
 // @flow
 import React, { Component } from 'react';
 import { Navbar, Alignment, Popover, Menu, MenuItem, MenuDivider, Overlay } from '@blueprintjs/core';
@@ -31,6 +32,9 @@ class TopBar extends Component<Props> {
   logout = async () => {
     const scope = await client.scope('General');
     await scope.logout();
+
+    // Move to the home location
+    window.location.href = '/';
   }
 
   changePassword = () => {
