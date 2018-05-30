@@ -44,7 +44,7 @@ class CashierTable extends React.Component<Props> {
     const { getMenuItem } = this.props;
 
     const tbl = this.props.table;
-
+    const active = tbl.items && tbl.items.length > 0;
     return (
       <Consumer>
         {(app) => {
@@ -65,8 +65,12 @@ class CashierTable extends React.Component<Props> {
                 }}
               >
                 <h4 style={{ display: 'flex', flex: 1 }}>Total: {tbl.items.reduce((res, item) => res + (item.qty * item.rate), 0)}</h4>
-                <Button onClick={this.cancelOrder} intent={Intent.DANGER}>Cancel Order</Button>
-                <Button onClick={this.printOrder} intent={Intent.PRIMARY}>Print</Button>
+                <Button onClick={this.cancelOrder} intent={Intent.DANGER} disabled={!active}>
+                  Cancel Order
+                </Button>
+                <Button onClick={this.printOrder} intent={Intent.PRIMARY} disabled={!active}>
+                  Print
+                </Button>
               </div>
               <table className="pt-html-table">
                 <thead>
