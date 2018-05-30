@@ -6,5 +6,5 @@ pm2 stop app || true
 
 # Start the app
 cd /home/ec2-user/restro/packages/server
-pm2 start build/index.js -n app
+pm2 start build/index.js -n app --update-env
 
