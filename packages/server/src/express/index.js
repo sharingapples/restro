@@ -8,8 +8,7 @@ import forgotPassword from './forgotPassword';
 export default function (app) {
   // Force to https
   app.use((req, res, next) => {
-    const proto = req.get('X-Forwarded-Proto');
-    if (proto && proto !== 'https') {
+    if (!req.secure && req.hostname === 'restro.net' && req.get('X-Forwarded-Proto') === 'http') {
       res.redirect(301, `https://${req.get('Host')}${req.url}`);
     } else {
       next();
