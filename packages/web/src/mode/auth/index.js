@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './Login';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
@@ -20,9 +20,11 @@ const Auth = () => (
     >
       <img src={logo} style={{ width: '100px' }} alt="logo" />
       <h4>Restro.NET</h4>
-      <Route path="/" component={Login} />
-      <Route path="/forgot" component={ForgotPassword} />
-      <Route path="/reset/:token" component={ResetPassword} />
+      <Switch>
+        <Route path="/forgot" component={ForgotPassword} />
+        <Route path="/reset/:token" component={ResetPassword} />
+        <Route component={Login} />
+      </Switch>
     </div>
   </Router>
 );
