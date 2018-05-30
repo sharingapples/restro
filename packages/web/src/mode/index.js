@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import Auth from './auth';
 import Waiter from './waiter';
@@ -22,7 +21,6 @@ type Props = {
 }
 
 const Mode = ({ mode }: Props) => {
-  console.log('Render with mode', mode);
   const M = modes[mode];
   if (M) {
     return (
