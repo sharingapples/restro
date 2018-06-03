@@ -7,6 +7,7 @@ import logout from './logout';
 import placeOrder from './placeOrder';
 import cancelOrder from './cancelOrder';
 import printOrder from './printOrder';
+import cancelItem from './cancelItem';
 
 const general = createScope('General', () => {
 
@@ -32,6 +33,7 @@ const cashier = createScope('Cashier', () => {
 
 cashier(cancelOrder);
 cashier(printOrder);
+cashier(cancelItem);
 
 // eslint-disable-next-line import/prefer-default-export
 export { switchRestro };
