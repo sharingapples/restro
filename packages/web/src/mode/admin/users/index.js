@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import schema from 'restro-common/schema';
-import { Button, Overlay } from '@blueprintjs/core';
+import { Button, Overlay, Intent, Toaster } from '@blueprintjs/core';
 
 import client from '../../../socket';
 import { Consumer } from '../../../App';
@@ -35,6 +35,11 @@ class Users extends React.Component<Props> {
     });
   }
 
+  onDeleteUser = async (id) => {
+    const admin = await client.scope('Admin');
+    await admin.deleteUser(id);
+  }
+
   getUsers = async () => {
     const admin = await client.scope('Admin');
     await admin.getUsers();
@@ -49,6 +54,19 @@ class Users extends React.Component<Props> {
   changeRole = id => () => {
     this.setState({
       changeRole: id,
+    });
+  }
+
+  deleteUser = (id, name) => () => {
+    Toaster.create({
+
+    }).show({
+      action: {
+        onClick: () => this.onDeleteUser(id),
+        text: 'Delete',
+      },
+      intent: Intent.DANGER,
+      message: `Are you sure you want to delete the user ${name}?`,
     });
   }
 
@@ -91,7 +109,7 @@ class Users extends React.Component<Props> {
                       <td>{u.name}</td>
                       <td>{u.role}</td>
                       <td>
-                        <Button onClick={this.changeRole(u.id)}>Change Role</Button>
+                        <Button className="pt-small" onClick={this.changeRole(u.id)}>Change Role</Button>
                         <Overlay
                           canEscapeKeyClose
                           hasBackdrop={false}
@@ -118,6 +136,7 @@ class Users extends React.Component<Props> {
                             </div>
                           </div>
                         </Overlay>
+                        <Button intent={Intent.DANGER} className="pt-small" onClick={this.deleteUser(u.id, u.name)} icon="trash" />
                       </td>
                     </tr>
                   ))}

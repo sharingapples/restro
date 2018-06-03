@@ -11,6 +11,7 @@ import cancelItem from './cancelItem';
 
 import addUser from './addUser';
 import getUsers from './getUsers';
+import deleteUser from './deleteUser';
 import changeRole from './changeRole';
 import updateMenuItem from './updateMenuItem';
 import updateTable from './updateTable';
@@ -39,6 +40,8 @@ admin(updateItem);
 admin(updateMenuItem);
 admin(updateTable);
 admin(addUser);
+admin(deleteUser);
+
 // admin(changePassword);
 
 const waiter = createScope('Waiter', () => {
