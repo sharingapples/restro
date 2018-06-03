@@ -25,7 +25,4 @@ export default async function updateMenuItem(menuItem) {
     restro.menuItems.push(mItem);
     channel.dispatch(schema.add('MenuItem', mItem));
   }
-
-  session.channel(`restro-${restro.id}`)
-    .dispatch(schema.init('MenuItem', restro.menuItems));
 }
