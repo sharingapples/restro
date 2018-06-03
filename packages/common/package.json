@@ -11,7 +11,8 @@
   "scripts": {
     "build:schema": "../../node_modules/.bin/babel src/schema -d schema",
     "build:actions": "../../node_modules/.bin/babel src/actions -d actions",
-    "build": "npm run build:schema && npm run build:actions"
+    "build:selectors": "../../node_modules/.bin/babel src/selectors -d selectors",
+    "build": "npm run build:schema && npm run build:actions && npm run build:selectors"
   },
   "author": "Ranjan Shrestha",
   "license": "MIT"
