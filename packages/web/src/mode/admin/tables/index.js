@@ -58,7 +58,8 @@ class Tables extends React.Component<Props> {
                 <TableForm record={{}} close={this.hideForm} />
               </Overlay>
             </div>
-          ))
+          ));
+
           return (
             <div>
               <table className="pt-html-table">
