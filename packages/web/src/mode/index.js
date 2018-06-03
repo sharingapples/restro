@@ -24,7 +24,7 @@ const Mode = ({ mode }: Props) => {
   const M = modes[mode];
   if (M) {
     return (
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{ display: 'flex', flex: 1, overflowY: 'scroll' }}>
         <M />
       </div>
     );
