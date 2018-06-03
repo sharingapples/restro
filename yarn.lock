@@ -7883,7 +7883,7 @@ shocked-common@^0.2.2:
   version "0.2.7"
   resolved "https://registry.npmjs.org/shocked-common/-/shocked-common-0.2.7.tgz#35167d88dced24d3b545fb238f2f93167110cf48"
 
-shocked@0.2.12:
+shocked@^0.2.12:
   version "0.2.12"
   resolved "https://registry.npmjs.org/shocked/-/shocked-0.2.12.tgz#db1dcbff0bbcaa3c74b1a1e38e0e179aafce0d67"
   dependencies:
