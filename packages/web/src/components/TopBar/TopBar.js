@@ -62,7 +62,10 @@ class TopBar extends Component<Props> {
                 { button }
               </Navbar.Group>
               <Navbar.Group align={Alignment.RIGHT}>
-                <Popover>
+                <Popover
+                  transitionDuration={0}
+                  modifiers={{ preventOverflow: { boundariesElement: 'window' } }}
+                >
                   <div>{ userName }</div>
                   <Menu>
                     <MenuItem text="Change Password" onClick={this.changePassword} />
