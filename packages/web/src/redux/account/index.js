@@ -6,14 +6,13 @@ const INITIAL_STATE = {
   sessionId: Cookie.get('restro-session'),
   online: false,
   user: null,
+  restroId: null,
+  restros: [],
 };
-
-console.log('Initial State', INITIAL_STATE);
 
 const reducer = () => (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'VERIFIED':
-      console.log('Verified', action);
       return {
         ...state,
         sessionId: action.payload,
@@ -24,6 +23,7 @@ const reducer = () => (state = INITIAL_STATE, action) => {
       return {
         ...state,
         user: action.payload,
+        restros: action.payload.restros,
       };
 
     case logout.TYPE:
@@ -31,6 +31,13 @@ const reducer = () => (state = INITIAL_STATE, action) => {
         ...state,
         user: null,
         sessionId: null,
+        restros: [],
+      };
+
+    case 'SWITCH_RESTRO':
+      return {
+        ...state,
+        restroId: action.payload,
       };
 
     case 'CONNECT':
