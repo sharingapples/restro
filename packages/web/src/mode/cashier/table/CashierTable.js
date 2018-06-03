@@ -2,7 +2,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Toaster } from '@blueprintjs/core';
 import schema from 'restro-common/schema';
 import { getRestro } from 'restro-common/selectors';
 
@@ -28,6 +28,29 @@ type Props = {
 }
 
 class CashierTable extends React.Component<Props> {
+  onCancelOrder = () => {
+    const { table } = this.props;
+    Toaster.create().show({
+      action: {
+        onClick: () => this.cancelOrder(),
+        text: 'Cancel Order',
+      },
+      message: `Are you sure you want to cancel order for Table ${table.number}?`,
+      intent: Intent.DANGER,
+    });
+  }
+
+  onCancelItem = (id, name, qty) => {
+    Toaster.create().show({
+      action: {
+        onClick: () => this.cancelItem(id),
+        text: 'Cancel Item',
+      },
+      message: `Cancel item ${name} (${qty}) ?`,
+      intent: Intent.DANGER,
+    });
+  }
+
   cancelOrder = async () => {
     const { table } = this.props;
     const cashier = await client.scope('Cashier');
@@ -83,7 +106,7 @@ class CashierTable extends React.Component<Props> {
                 }}
               >
                 <h4 style={{ display: 'flex', flex: 1 }}>Total: {numeral(total).format('#,##0')}</h4>
-                <Button onClick={this.cancelOrder} intent={Intent.DANGER} disabled={!active}>
+                <Button onClick={this.onCancelOrder} intent={Intent.DANGER} disabled={!active}>
                   Cancel Order
                 </Button>
                 <Button onClick={this.printOrder} intent={Intent.PRIMARY} disabled={!active}>
@@ -102,16 +125,19 @@ class CashierTable extends React.Component<Props> {
                   </tr>
                 </thead>
                 <tbody>
-                  { tbl.items.map((item, idx) => (
-                    <tr key={item.id}>
-                      <td>{idx + 1}</td>
-                      <td align="left">{getMenuItem(item.menuItemId).name}</td>
-                      <td>{numeral(item.rate).format('#,##0')}</td>
-                      <td align="center">{item.qty}</td>
-                      <td align="right">{numeral(item.rate * item.qty).format('#,##0')}</td>
-                      <td><Button onClick={() => this.cancelItem(item.id)} className="pt-small" intent={Intent.DANGER}>Cancel</Button></td>
-                    </tr>
-                  ))}
+                  { tbl.items.map((item, idx) => {
+                    const menuItemName = getMenuItem(item.menuItemId).name;
+                    return (
+                      <tr key={item.id}>
+                        <td>{idx + 1}</td>
+                        <td align="left">{menuItemName}</td>
+                        <td>{numeral(item.rate).format('#,##0')}</td>
+                        <td align="center">{item.qty}</td>
+                        <td align="right">{numeral(item.rate * item.qty).format('#,##0')}</td>
+                        <td><Button onClick={() => this.onCancelItem(item.id, menuItemName, item.qty)} className="pt-small" intent={Intent.DANGER}>Cancel</Button></td>
+                      </tr>
+                    );
+                  })}
                   <SumRow caption="Sub Total" value={subTotal} />
                   <SumRow caption="Service Charge" value={serviceCharge} />
                   <SumRow caption="VAT" value={vat} />
