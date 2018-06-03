@@ -54,7 +54,13 @@ export default function schemaReducer(...schemes) {
         return {
           ...state,
           [schema]: {
-            byId: { ...state[schema].byId, [action.payload.id]: action.payload },
+            byId: {
+              ...state[schema].byId,
+              [action.payload.id]: {
+                ...state[schema].byId[action.payload.id],
+                ...action.payload,
+              },
+            },
             allIds: state[schema].allIds,
           },
         };
