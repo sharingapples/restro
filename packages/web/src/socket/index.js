@@ -10,10 +10,26 @@ client.on('connect', () => {
   });
 });
 
+
+let retryTimer = null;
+function retryConnect() {
+  if (retryTimer) {
+    return;
+  }
+
+  retryTimer = setTimeout(() => {
+    retryTimer = null;
+    client.reconnect();
+  }, 1000);
+}
+
 client.on('disconnect', () => {
   store.dispatch({
     type: 'DISCONNECT',
   });
+
+  // Try to establish a connection after a timeout
+  retryConnect();
 });
 
 client.on('error', (err) => {
