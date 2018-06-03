@@ -9,6 +9,9 @@ import cancelOrder from './cancelOrder';
 import printOrder from './printOrder';
 import cancelItem from './cancelItem';
 
+import addUser from './addUser';
+import getUsers from './getUsers';
+import changeRole from './changeRole';
 import updateMenuItem from './updateMenuItem';
 
 const general = createScope('General', () => {
@@ -28,7 +31,10 @@ const admin = createScope('Admin', (session) => {
   session.subscribe(`restro-${restro.id}/admin`);
 });
 
+admin(getUsers);
+admin(changeRole);
 admin(updateMenuItem);
+admin(addUser);
 // admin(changePassword);
 
 const waiter = createScope('Waiter', () => {
