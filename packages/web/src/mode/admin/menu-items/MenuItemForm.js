@@ -60,7 +60,16 @@ class MenuItemForm extends React.Component<Props> {
     const { name, itemId, qty, price } = this.state;
 
     return (
-      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', backgroundColor: 'white', marginTop: '50px', padding: '20px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+           backgroundColor: 'white',
+            marginTop: '50px',
+            padding: '20px',
+          }}
+      >
         <div style={{ backgroundColor: 'white', maxWidth: '400px' }}>
           <Label text="Menu name">
             <InputGroup type="text" name="name" value={name} onChange={this.updateName} />
