@@ -40,6 +40,7 @@ run(async (nodeApp) => {
       } catch (err) {
         // console.error(err);
         session.dispatch({ type: 'LOGOUT' });
+        session.emit('logout');
         return false;
       }
     } else if (origin === 'printer') {

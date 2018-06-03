@@ -4,15 +4,18 @@ import store from '../redux';
 
 const client = connect(getRemoteUrl() : null, store);
 
+
+let retryConnect = true;
+let retryTimer = null;
+
 client.on('connect', () => {
+  retryConnect = true;
   store.dispatch({
     type: 'CONNECT',
   });
 });
 
-
-let retryTimer = null;
-function retryConnect() {
+function reconnect() {
   if (retryTimer) {
     return;
   }
@@ -29,7 +32,13 @@ client.on('disconnect', () => {
   });
 
   // Try to establish a connection after a timeout
-  retryConnect();
+  if (retryConnect) {
+    reconnect();
+  }
+});
+
+client.on('logout', () => {
+  retryConnect = false;
 });
 
 client.on('error', (err) => {

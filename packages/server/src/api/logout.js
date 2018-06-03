@@ -9,6 +9,7 @@ export default function logout() {
   cache.users.del(user.token);
 
   session.dispatch(actions.logout());
+  session.emit('logout');
 
   // close the session on logout
   session.close();
