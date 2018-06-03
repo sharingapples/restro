@@ -9,6 +9,6 @@ export default async function update(db, table, values, condition) {
 
   const sql = `UPDATE [${table}] SET ${set} WHERE ${conditionStr}`;
   const res = await db.run(sql, ...fieldParams, ...conditionParams);
-  return res.changes;
+  return res.stmt.changes;
 }
 
