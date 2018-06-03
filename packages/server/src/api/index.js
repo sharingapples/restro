@@ -14,6 +14,7 @@ import getUsers from './getUsers';
 import changeRole from './changeRole';
 import updateMenuItem from './updateMenuItem';
 import updateTable from './updateTable';
+import updateItem from './updateItem';
 
 const general = createScope('General', () => {
 
@@ -34,6 +35,7 @@ const admin = createScope('Admin', (session) => {
 
 admin(getUsers);
 admin(changeRole);
+admin(updateItem);
 admin(updateMenuItem);
 admin(updateTable);
 admin(addUser);
