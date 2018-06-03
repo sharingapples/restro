@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Auth from './auth';
 import Waiter from './waiter';
-// import Admin from './admin';
+import Admin from './admin';
 import Cashier from './cashier';
 
 import logo from '../logo.svg';
@@ -13,7 +13,7 @@ const modes = {
   Auth,
   Waiter,
   Cashier,
-  Admin: Cashier,
+  Admin,
 };
 
 type Props = {
