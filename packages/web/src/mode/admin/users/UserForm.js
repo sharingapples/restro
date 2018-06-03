@@ -5,9 +5,19 @@ import client from '../../../socket';
 
 type Props = {
   close: () => {},
+  record: {
+    id: string,
+    name: string,
+    email: string,
+    role: string,
+  }
 }
 
 class UserForm extends React.Component<Props> {
+  static defaultProps = {
+    record: {},
+  };
+
   constructor(props) {
     super(props);
 

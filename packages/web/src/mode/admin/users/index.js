@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { connect } from 'react-redux';
 import schema from 'restro-common/schema';
@@ -7,7 +8,11 @@ import client from '../../../socket';
 import { Consumer } from '../../../App';
 import UserForm from './UserForm';
 
-class Users extends React.Component {
+type Props = {
+  users: Array<{}>,
+}
+
+class Users extends React.Component<Props> {
   state = {
     changeRole: null,
     editId: null,
@@ -19,7 +24,6 @@ class Users extends React.Component {
 
   onChangeRole = userId => async (e) => {
     const newRole = e.target.value;
-    console.log('Change role to', newRole);
     const admin = await client.scope('Admin');
     await admin.changeRole(userId, newRole);
     this.changeRole(null)();
