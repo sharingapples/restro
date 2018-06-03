@@ -38,7 +38,7 @@ run(async (nodeApp) => {
         session.dispatch({ type: 'LOGIN', payload: user });
         return true;
       } catch (err) {
-        console.error(err);
+        // console.error(err);
         session.dispatch({ type: 'LOGOUT' });
         return false;
       }
