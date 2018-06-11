@@ -1,8 +1,8 @@
 {
   "type": "epson",
   "interface": "tcp://192.168.1.126:9000",
-  "server": "localhost",
+  "server": "localhost:4000",
   "width": 33,
   "characterSet": "SLOVENIA",
-  "modes": "BILL"
+  "modes": "BILL|BAR|COFFEE"
 }
