@@ -44,7 +44,10 @@ run(async (nodeApp) => {
         return false;
       }
     } else if (origin === 'printer') {
-      session.subscribe('BILL_PRINTER');
+      const types = token.split('%7C');
+      types.forEach((t) => {
+        session.subscribe(`${t}_PRINTER`);
+      });
       return true;
     }
 
