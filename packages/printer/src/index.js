@@ -58,9 +58,11 @@ config.modes.split('|').map(m => m.trim()).forEach((m) => {
   } else {
     console.log(`Listening for event ${m}_PRINT`);
     client.on(`${m}_PRINT`, (data) => {
-      console.log(data);
+      console.log(m, data);
       formatOrder(printer, data);
-      printer.execute((err) => {
+      const buf = printer.getBuffer();
+      printer.clear();
+      printer.raw(buf, (err) => {
         if (err) {
           console.error(err);
         }
