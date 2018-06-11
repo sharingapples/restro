@@ -3,6 +3,7 @@ const printer = require('node-thermal-printer');
 const config = require('./config.json');
 
 module.exports = function billPrint(data) {
+  console.log(data);
   printer.init(config);
 
   function printRow(headers, row = null) {
@@ -32,6 +33,7 @@ module.exports = function billPrint(data) {
   });
 
   printer.cut();
+  console.log('sending data to printer');
   printer.execute((err) => {
     if (err) {
       console.error('Print failed', err);

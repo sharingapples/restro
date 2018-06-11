@@ -1,5 +1,8 @@
 {
   "type": "epson",
-  "interface": "COM5",
-  "width": 40
+  "interface": "tcp://192.168.1.126:9000",
+  "server": "localhost",
+  "width": 33,
+  "characterSet": "SLOVENIA",
+  "modes": "BILL"
 }
