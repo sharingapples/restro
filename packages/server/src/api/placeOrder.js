@@ -27,8 +27,6 @@ export default async function placeOrder(tableId, items) {
       };
     }
 
-    console.log('Order ID', table.activeOrder);
-
     return Promise.all(items.map(async (item) => {
       // eslint-disable-next-line eqeqeq
       const menuItem = restro.menuItems.find(m => m.id == item.id);
@@ -71,12 +69,19 @@ export default async function placeOrder(tableId, items) {
     return res;
   }, {});
 
-
-  console.log('Seggregated', seggregated);
-
   // Emit for printing of the respective type
   Object.keys(seggregated).forEach((id) => {
-    session.channel(`CATEGORY-${id}`).emit('NEW_ORDER', seggregated[id]);
+    const category = restro.categories.find(c => c.id == id);
+    const type = category.name.toUpperCase();
+    session.channel(`${type}_PRINTER`).emit(`${type}_PRINT`, {
+      title: `${type}_ORDER`,
+      table: table.number,
+      date: Date.now(),
+      items: seggregated[id].map(item => ({
+        name: restro.menuItems.find(m => m.id ==item.menuItemId).name,
+        qty: item.qty,
+      })),
+    });
   });
 
   // Update the table

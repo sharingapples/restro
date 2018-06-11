@@ -16,6 +16,8 @@ export default async function printOrder(tableId) {
 
   await db.execute(async ({ update }) => {
     await update('Order', {
+      vat: restro.org.vat,
+      serviceCharge: restro.org.serviceCharge,
       status: 'Complete',
       timestamp: Date.now(),
       userId: user.id,
@@ -23,17 +25,23 @@ export default async function printOrder(tableId) {
   });
 
   table.activeOrder = null;
-  console.log('Broadcast print');
 
+  const discount = activeOrder.discount || 0;
+  const orderTotal = activeOrder.items.reduce((a, i) => a + (i.qty * i.rate), 0) - discount;
+  const serviceCharge = orderTotal * restro.org.serviceCharge;
+  const vat = (orderTotal + serviceCharge) * restro.org.vat;
   try {
     // Broadcast for printing
     session.channel('BILL_PRINTER').emit('BILL_PRINT', {
-      restro: restro.org.name,
-      tableNumber: table.number,
-      orderId: activeOrder.orderId,
-      vat: activeOrder.vat,
-      serviceCharge: activeOrder.serviceCharge,
-      discount: activeOrder.discount,
+      title: restro.org.name,
+      subTitle: restro.org.subTitle,
+      pan: restro.org.pan,
+      table: table.number,
+      order: activeOrder.id,
+      serviceCharge,
+      vat,
+      cashier: user.name,
+      discount: activeOrder.discount || 0,
       items: activeOrder.items.map(itm => ({
         ...itm,
         // eslint-disable-next-line eqeqeq
