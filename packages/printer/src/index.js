@@ -9,11 +9,12 @@ const WebSocket = require('ws');
 
 global.WebSocket = WebSocket;
 
-const client = connect(`ws://${server}/shocked/printer/${config.modes}`);
+console.log(config.modes);
+const client = connect(`ws://${config.server}/shocked/printer/${config.modes}`);
 
 printer.init(config);
 
-let retyConnect = true;
+let retryConnect = true;
 let retryTimer = null;
 
 function reconnect() {
@@ -42,28 +43,30 @@ client.on('disconnect', () => {
 });
 
 
-// Listen for bill printing events
-client.on('BILL_PRINT', (data) => {
-  console.log(data);
-  formatBill(printer, data);
-  printer.execute((err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
-});
-
-
 // List for order printing events
-config.modes.split(',').map(m => m.trim()).filter(m => m !== 'BILL').forEach((m) => {
-  client.on(`${m}_PRINT`, (data) => {
-    formatOrder(printer, data);
-    printer.execute((err) => {
-      if (err) {
-        console.error(err);
-      }
+config.modes.split('|').map(m => m.trim()).forEach((m) => {
+  if (m === 'BILL') {
+    // Listen for bill printing events
+    client.on('BILL_PRINT', (data) => {
+      formatBill(printer, data);
+      printer.execute((err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
     });
-  });
+  } else {
+    console.log(`Listening for event ${m}_PRINT`);
+    client.on(`${m}_PRINT`, (data) => {
+      console.log(data);
+      formatOrder(printer, data);
+      printer.execute((err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+  }
 });
 
 
