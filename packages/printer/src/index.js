@@ -9,7 +9,7 @@ const WebSocket = require('ws');
 
 global.WebSocket = WebSocket;
 
-const client = connect(`ws://localhost:4000/shocked/printer/${config.modes}`);
+const client = connect(`ws://${server}/shocked/printer/${config.modes}`);
 
 printer.init(config);
 
@@ -55,7 +55,7 @@ client.on('BILL_PRINT', (data) => {
 
 
 // List for order printing events
-config.modes.split(',').map(m => m.trim().toUppercase()).filter(m => m !== 'BILL').forEach((m) => {
+config.modes.split(',').map(m => m.trim()).filter(m => m !== 'BILL').forEach((m) => {
   client.on(`${m}_PRINT`, (data) => {
     formatOrder(printer, data);
     printer.execute((err) => {
