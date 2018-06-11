@@ -23,4 +23,9 @@ export default function (app) {
   app.get('/table/:id', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
   });
+
+  // TODO: Need to fix this public file with react-router server side
+  app.get('/reset/:token', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
+  })
 }
