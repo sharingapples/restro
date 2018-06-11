@@ -10,7 +10,7 @@ const WebSocket = require('ws');
 global.WebSocket = WebSocket;
 
 console.log(config.modes);
-const client = connect(`ws://${config.server}/shocked/printer/${config.modes}`);
+const client = connect(`${config.server}/shocked/printer/${config.modes}`);
 
 printer.init(config);
 
