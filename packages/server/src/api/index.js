@@ -16,6 +16,7 @@ import changeRole from './changeRole';
 import updateMenuItem from './updateMenuItem';
 import updateTable from './updateTable';
 import updateItem from './updateItem';
+import getOrders from './getOrders';
 
 const general = createScope('General', () => {
 
@@ -41,7 +42,7 @@ admin(updateMenuItem);
 admin(updateTable);
 admin(addUser);
 admin(deleteUser);
-
+admin(getOrders);
 // admin(changePassword);
 
 const waiter = createScope('Waiter', () => {
