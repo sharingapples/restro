@@ -1,5 +1,5 @@
 const printer = require('node-thermal-printer');
-const config = require('./config.json');
+const config = require('../config.json');
 const formatBill = require('./formatBill');
 const formatOrder = require('./formatOrder');
 const connect = require('shocked-client').default;
@@ -43,30 +43,29 @@ client.on('disconnect', () => {
 });
 
 
+function print() {
+  const buf = printer.getBuffer();
+  printer.clear();
+  printer.raw(buf, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  }
+}
+
 // List for order printing events
 config.modes.split('|').map(m => m.trim()).forEach((m) => {
   if (m === 'BILL') {
     // Listen for bill printing events
     client.on('BILL_PRINT', (data) => {
       formatBill(printer, data);
-      printer.execute((err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      print();
     });
   } else {
     console.log(`Listening for event ${m}_PRINT`);
     client.on(`${m}_PRINT`, (data) => {
-      console.log(m, data);
       formatOrder(printer, data);
-      const buf = printer.getBuffer();
-      printer.clear();
-      printer.raw(buf, (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
+      print();
     });
   }
 });
