@@ -1,8 +1,8 @@
 {
   "type": "epson",
   "interface": "tcp://192.168.1.126:9000",
-  "server": "localhost:4000",
+  "server": "wss://restro.net",
   "width": 33,
   "characterSet": "SLOVENIA",
-  "modes": "BILL|BAR|COFFEE"
+  "modes": "BILL|BAR|COFFEE|KITCHEN"
 }
