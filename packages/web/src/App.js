@@ -9,6 +9,14 @@ import Mode from './mode';
 const Context = React.createContext({});
 
 class App extends Component {
+  state: {
+    Prompt: null,
+  };
+
+  componentDidMount() {
+    App.self = this;
+  }
+
   getTopBar = () => this.bar
 
   registerTopBar = (bar) => {
@@ -20,16 +28,27 @@ class App extends Component {
   }
 
   render() {
+    const { Prompt } = this.state;
+
     return (
       <div className="App">
         <Provider store={store}>
           <Context.Provider value={this}>
             <Mode />
+            {Prompt}
           </Context.Provider>
         </Provider>
       </div>
     );
   }
+}
+
+App.prompt = (child, props) => {
+  App.self.setState({
+    Prompt: (
+      <InputBox {...props}>{child}</InputBox>
+    ),
+  });
 }
 
 export const { Consumer } = Context;

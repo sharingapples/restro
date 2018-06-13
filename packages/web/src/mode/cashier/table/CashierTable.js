@@ -53,6 +53,15 @@ class CashierTable extends React.Component<Props> {
 
   cancelOrder = async () => {
     const { table } = this.props;
+
+    InputBox.show(({ Input }) => (
+      <Input type="text" label="Remark" name="remark" />
+    ), {
+      onSuccess: (content) => {
+
+      },
+    })
+
     const cashier = await client.scope('Cashier');
 
     const remark = '';
