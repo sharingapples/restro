@@ -13,7 +13,8 @@
     "moment": "^2.22.2",
     "node-thermal-printer": "^2.0.0",
     "numeral": "^2.0.6",
-    "shocked-client": "^0.2.7",
+    "shocked-client": "0.2.14",
+    "shocked-network-node": "^0.2.14",
     "ws": "^5.2.0"
   }
 }

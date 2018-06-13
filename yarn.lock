@@ -7877,6 +7877,12 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.npmjs.org/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
 
+shocked-client@0.2.14:
+  version "0.2.14"
+  resolved "https://registry.npmjs.org/shocked-client/-/shocked-client-0.2.14.tgz#0b4ee81bbf4ef639477f16d59b950837af0faf89"
+  dependencies:
+    shocked-common "^0.2.2"
+
 shocked-client@^0.2.7:
   version "0.2.7"
   resolved "https://registry.npmjs.org/shocked-client/-/shocked-client-0.2.7.tgz#f765fe7fb8fe78688d1eb27a9bfb52ae2f7d079f"
@@ -7886,6 +7892,10 @@ shocked-client@^0.2.7:
 shocked-common@^0.2.2:
   version "0.2.7"
   resolved "https://registry.npmjs.org/shocked-common/-/shocked-common-0.2.7.tgz#35167d88dced24d3b545fb238f2f93167110cf48"
+
+shocked-network-node@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.npmjs.org/shocked-network-node/-/shocked-network-node-0.2.14.tgz#e4f26b78870f60359cdfdf4cfdd2351d93369fda"
 
 shocked@^0.2.12:
   version "0.2.12"
