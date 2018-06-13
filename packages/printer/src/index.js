@@ -50,7 +50,7 @@ function print() {
     if (err) {
       console.error(err);
     }
-  }
+  });
 }
 
 // List for order printing events
