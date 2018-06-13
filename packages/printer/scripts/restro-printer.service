@@ -1,0 +1,10 @@
+[Unit]
+Description=Restro.NET POS Printer Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/node /home/pi/restro/packages/printer/src/index.js
+
+[Install]
+WantedBy=multi-user.target
