@@ -1,3 +1,4 @@
+const moment = require('moment');
 const printer = require('node-thermal-printer');
 const config = require('../config.json');
 const formatBill = require('./formatBill');
@@ -18,8 +19,13 @@ const client = connect(
 printer.init(config);
 
 network.on('online', () => {
+  console.log('Connecting at', moment().format('HH:mm:ss'));
   // Perform a reconnect as soon as we get a online signal
   client.reconnect();
+});
+
+network.on('offline', () => {
+  console.log('Got offline at', moment().format('HH:mm:ss'));
 });
 
 async function print() {
@@ -38,7 +44,7 @@ async function print() {
 
 // List for order printing events
 config.modes.split('|').map(m => m.trim()).forEach((m) => {
-  client.on(`${m}_PRINT`, async (data, serial) => {
+  client.on(`${m}_PRINT`, async ({ data, serial }) => {
     if (m === 'BILL') {
       formatBill(printer, data);
     } else {
@@ -47,8 +53,12 @@ config.modes.split('|').map(m => m.trim()).forEach((m) => {
 
     try {
       await print();
-      client.call('Printer', 'printed', m, serial);
+
+      const s = await client.scope('Printer');
+      s.printed(m, serial);
+      // client.rpc('Printer', 'printed', m, serial);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
     }
   });
