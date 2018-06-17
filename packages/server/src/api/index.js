@@ -61,11 +61,15 @@ cashier(cancelOrder);
 cashier(printOrder);
 cashier(cancelItem);
 
+function ping() {
+  return 'pong';
+}
+
 const printer = createScope('Printer', () => {
 
 });
 printer(printed);
-
+printer(ping);
 
 // eslint-disable-next-line import/prefer-default-export
 export { switchRestro };
