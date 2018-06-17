@@ -7897,9 +7897,9 @@ shocked-network-node@^0.2.14:
   version "0.2.14"
   resolved "https://registry.npmjs.org/shocked-network-node/-/shocked-network-node-0.2.14.tgz#e4f26b78870f60359cdfdf4cfdd2351d93369fda"
 
-shocked@^0.2.12:
-  version "0.2.12"
-  resolved "https://registry.npmjs.org/shocked/-/shocked-0.2.12.tgz#db1dcbff0bbcaa3c74b1a1e38e0e179aafce0d67"
+shocked@0.2.15:
+  version "0.2.15"
+  resolved "https://registry.npmjs.org/shocked/-/shocked-0.2.15.tgz#a548a652afbda640794c1f57d7db2e9b46241790"
   dependencies:
     shocked-common "^0.2.2"
     url-pattern "^1.0.3"
