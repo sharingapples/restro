@@ -47,7 +47,7 @@ config.modes.split('|').map(m => m.trim()).forEach((m) => {
 
     try {
       await print();
-      client.call('printer', 'printed', m, serial);
+      client.call('Printer', 'printed', m, serial);
     } catch (err) {
       console.error(err);
     }
