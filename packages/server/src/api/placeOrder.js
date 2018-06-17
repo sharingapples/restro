@@ -1,12 +1,11 @@
 import schema from 'restro-common/schema';
 import db from '../db';
+import printer from './printer';
 
 export default async function placeOrder(tableId, items) {
   const { session } = this;
   const userId = session.get('user').id;
   const restro = session.get('restro');
-
-  console.log('Restro is', restro.org, tableId, items);
 
   const table = restro.tables.find(t => t.id === tableId);
 
@@ -71,14 +70,16 @@ export default async function placeOrder(tableId, items) {
 
   // Emit for printing of the respective type
   Object.keys(seggregated).forEach((id) => {
+    // eslint-disable-next-line eqeqeq
     const category = restro.categories.find(c => c.id == id);
     const type = category.name.toUpperCase();
-    session.channel(`${type}_PRINTER`).emit(`${type}_PRINT`, {
+    printer.queue(type, {
       title: `${type}_ORDER`,
       table: table.number,
       date: Date.now(),
       items: seggregated[id].map(item => ({
-        name: restro.menuItems.find(m => m.id ==item.menuItemId).name,
+        // eslint-disable-next-line eqeqeq
+        name: restro.menuItems.find(m => m.id == item.menuItemId).name,
         qty: item.qty,
       })),
     });

@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import start from 'shocked';
 import run from 'app-node';
+import printer from './api/printer';
 
 import { switchRestro } from './api';
 
@@ -46,8 +47,15 @@ run(async (nodeApp) => {
     } else if (origin === 'printer') {
       const types = token.split('%7C');
       types.forEach((t) => {
-        session.subscribe(`${t}_PRINTER`);
+        printer.register(t, session);
       });
+
+      session.addCloseListener(() => {
+        types.forEach((t) => {
+          printer.unregister(t, session);
+        });
+      });
+
       return true;
     }
 
