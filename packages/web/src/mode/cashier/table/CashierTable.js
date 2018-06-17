@@ -8,7 +8,7 @@ import { getRestro } from 'restro-common/selectors';
 
 import numeral from 'numeral';
 
-import { Consumer } from '../../../App';
+import App, { Consumer } from '../../../App';
 import client from '../../../socket';
 
 const SumRow = (({ caption, value }) : { caption: string, value: number }) => (
@@ -28,18 +28,6 @@ type Props = {
 }
 
 class CashierTable extends React.Component<Props> {
-  onCancelOrder = () => {
-    const { table } = this.props;
-    Toaster.create().show({
-      action: {
-        onClick: () => this.cancelOrder(),
-        text: 'Cancel Order',
-      },
-      message: `Are you sure you want to cancel order for Table ${table.number}?`,
-      intent: Intent.DANGER,
-    });
-  }
-
   onCancelItem = (id, name, qty) => {
     Toaster.create().show({
       action: {
@@ -51,24 +39,27 @@ class CashierTable extends React.Component<Props> {
     });
   }
 
-  cancelOrder = async () => {
+  onCancelOrder = async () => {
     const { table } = this.props;
 
-    InputBox.show(({ Input }) => (
+    App.prompt(({ Input }) => (
       <Input type="text" label="Remark" name="remark" />
     ), {
-      onSuccess: (content) => {
+      title: 'Cancel Order',
+      content: { remark: '' },
+      onSuccess: async (content) => {
+        const remark = content.remark.trim();
+        if (!remark) {
+          return false;
+        }
 
+        const cashier = await client.scope('Cashier');
+        await cashier.cancelOrder(table.id, content.remark);
+        // Move to home page after cancelation
+        window.history.back();
+        return true;
       },
-    })
-
-    const cashier = await client.scope('Cashier');
-
-    const remark = '';
-
-    await cashier.cancelOrder(table.id, remark);
-    // Move to home page after cancelation
-    window.history.back();
+    });
   }
 
   printOrder = async () => {
