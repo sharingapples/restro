@@ -16,6 +16,20 @@ const client = connect(
   network
 );
 
+client.on('error', () => {
+  // Reconnect in a second, if an error occurs
+  setTimeout(() => {
+    client.reconnect();
+  }, 1000);
+});
+
+client.on('disconnect', () => {
+  // Retry connecting in a second, if disconnected
+  setTimeout(() => {
+    client.reconnect();
+  }, 1000);
+});
+
 printer.init(config);
 
 network.on('online', () => {
