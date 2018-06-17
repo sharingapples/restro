@@ -18,6 +18,8 @@ import updateTable from './updateTable';
 import updateItem from './updateItem';
 import getOrders from './getOrders';
 
+import { printed } from './printer';
+
 const general = createScope('General', () => {
 
 });
@@ -58,6 +60,12 @@ const cashier = createScope('Cashier', () => {
 cashier(cancelOrder);
 cashier(printOrder);
 cashier(cancelItem);
+
+const printer = createScope('Printer', () => {
+
+});
+printer(printed);
+
 
 // eslint-disable-next-line import/prefer-default-export
 export { switchRestro };
