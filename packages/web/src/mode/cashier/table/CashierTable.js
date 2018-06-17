@@ -28,6 +28,11 @@ type Props = {
 }
 
 class CashierTable extends React.Component<Props> {
+  state = {
+    discount: 0,
+    serviceCharge: true,
+  };
+
   onCancelItem = (id, name, qty) => {
     Toaster.create().show({
       action: {
@@ -62,11 +67,61 @@ class CashierTable extends React.Component<Props> {
     });
   }
 
-  printOrder = async () => {
+  onPrintOrder = async () => {
+    const { discount, serviceCharge } = this.state;
     const { table } = this.props;
-    const cashier = await client.scope('Cashier');
+    const itemTotal = table.items.reduce((a, i) => a + (i.qty * i.rate), 0);
 
-    await cashier.printOrder(table.id);
+    App.prompt(({ Input, content }) => {
+      const v = this.calcValues(itemTotal, content.discount, content.serviceCharge);
+      return (
+        <div style={{ display: 'flex', flex: 1 }}>
+          <div style={{ display: 'flex', flex: 3, flexDirection: 'column' }}>
+            <Input type="text" label="Discount" name="discount" />
+            <Input type="checkbox" label="Service Charge" name="serviceCharge" />
+          </div>
+          <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+            <table>
+              <tbody>
+                <tr><td>Item Total: </td><td align="right">{numeral(itemTotal).format('#,##0.00')}</td></tr>
+                <tr><td><b>Discount: </b></td><td align="right"><b>{numeral(v.discount).format('#,##0.00')}</b></td></tr>
+                <tr><td>Service Charge: </td><td align="right">{numeral(v.service).format('#,##0.00')}</td></tr>
+                <tr><td>VAT: </td><td align="right">{numeral(v.vat).format('#,##0.00')}</td></tr>
+                <tr><td><b>Grand Total: </b></td><td align="right"><b>{numeral(v.grandTotal).format('#,##0.00')}</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }, {
+      title: 'Print Order',
+      content: { discount, serviceCharge },
+      onSuccess: async (content) => {
+        const v = this.calcValues(itemTotal, content.discount, content.serviceCharge);
+        const cashier = await client.scope('Cashier');
+        await cashier.printOrder(table.id, v.discount, content.serviceCharge);
+        window.history.back();
+        return true;
+      },
+    });
+  }
+
+  calcValues(total, disc, serviceCharge) {
+    const { restro } = this.props;
+
+    const d = disc.toString().trim();
+    const discount = (d.endsWith('%') ? (parseInt(d.substr(0, d.length - 1), 10) / 100) * total : parseInt(d, 10)) || 0;
+    const service = (total - discount) * (serviceCharge ? restro.serviceCharge : 0);
+    const beforeVAT = (total - discount) + service;
+    const vat = beforeVAT * restro.vat;
+    const grandTotal = beforeVAT + vat;
+    return {
+      total,
+      discount,
+      service,
+      vat,
+      grandTotal,
+    };
   }
 
   cancelItem = async (id) => {
@@ -109,7 +164,7 @@ class CashierTable extends React.Component<Props> {
                 <Button onClick={this.onCancelOrder} intent={Intent.DANGER} disabled={!active}>
                   Cancel Order
                 </Button>
-                <Button onClick={this.printOrder} intent={Intent.PRIMARY} disabled={!active}>
+                <Button onClick={this.onPrintOrder} intent={Intent.PRIMARY} disabled={!active}>
                   Print
                 </Button>
               </div>
