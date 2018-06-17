@@ -92,7 +92,7 @@ class InputBox extends React.Component<Props> {
 
   render() {
     const { title } = this.props;
-    const { visible } = this.state;
+    const { visible, content } = this.state;
 
     return (
       <Overlay
@@ -112,7 +112,7 @@ class InputBox extends React.Component<Props> {
           }}
         >
           <h3>{title}</h3>
-          {this.props.children({ Input: this.Input })}
+          {this.props.children({ Input: this.Input, content })}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={this.hide}>Cancel</Button>
             <Button
