@@ -9,8 +9,19 @@ type Props = {
   content: Object,
   title: string,
   onSuccess: (Object) => void,
+  onChange: (Object) => void,
   children: () => Node | Array<Node>
 };
+
+function getClassName(type) {
+  if (type === 'text' || type === 'password') {
+    return 'pt-input';
+  } else if (type === 'checkbox') {
+    return 'pt-control pt-switch';
+  }
+
+  return 'pt-input';
+}
 
 class InputBox extends React.Component<Props> {
   constructor(props) {
@@ -25,13 +36,15 @@ class InputBox extends React.Component<Props> {
       gid += 1;
 
       const id = `inp-box-${gid}`;
+      const className = getClassName(type);
       return (
         <FormGroup label={label} labelFor={id}>
           <input
-            className="pt-input pt-fill"
+            className={className}
             type={type}
             id={id}
-            value={this.state[name]}
+            value={this.state.content[name]}
+            checked={this.state.content[name]}
             onChange={this.handleChange(name)}
           />
         </FormGroup>
@@ -41,13 +54,23 @@ class InputBox extends React.Component<Props> {
 
   handleChange(name) {
     return (e) => {
-      const newValue = e.target.value;
-      this.setState(prev => ({
-        content: {
+      const newValue = (e.target.type === 'checkbox') ? e.target.checked : e.target.value;
+      // const newValue = e.target.value;
+      // console.log('Handle Change value', newValue);
+      this.setState((prev) => {
+        const newContent = {
           ...prev.content,
           [name]: newValue,
-        },
-      }));
+        };
+
+        if (this.props.onChange) {
+          this.props.onChange(newContent);
+        }
+
+        this.setState({
+          content: newContent,
+        });
+      });
     };
   }
 
