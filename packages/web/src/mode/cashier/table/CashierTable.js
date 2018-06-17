@@ -79,6 +79,7 @@ class CashierTable extends React.Component<Props> {
           <div style={{ display: 'flex', flex: 3, flexDirection: 'column' }}>
             <Input type="text" label="Discount" name="discount" />
             <Input type="checkbox" label="Service Charge" name="serviceCharge" />
+            <Input type="text" label="Remark" name="remark" />
           </div>
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
             <table>
@@ -95,11 +96,11 @@ class CashierTable extends React.Component<Props> {
       );
     }, {
       title: 'Print Order',
-      content: { discount, serviceCharge },
+      content: { discount, serviceCharge, remark: '' },
       onSuccess: async (content) => {
         const v = this.calcValues(itemTotal, content.discount, content.serviceCharge);
         const cashier = await client.scope('Cashier');
-        await cashier.printOrder(table.id, v.discount, content.serviceCharge);
+        await cashier.printOrder(table.id, v.discount, content.serviceCharge, content.remark);
         window.history.back();
         return true;
       },

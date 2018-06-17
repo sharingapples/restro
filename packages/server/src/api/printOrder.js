@@ -2,7 +2,7 @@ import schema from 'restro-common/schema';
 import db from '../db';
 import printer from './printer';
 
-export default async function printOrder(tableId, discount = 0, addServiceCharge = true) {
+export default async function printOrder(tableId, discount = 0, addServiceCharge = true, remark = '') {
   const { session } = this;
 
   const user = await session.get('user');
@@ -22,6 +22,7 @@ export default async function printOrder(tableId, discount = 0, addServiceCharge
       status: 'Complete',
       timestamp: Date.now(),
       userId: user.id,
+      remark,
     }, { id: activeOrder.id });
   });
 
@@ -47,6 +48,7 @@ export default async function printOrder(tableId, discount = 0, addServiceCharge
       // eslint-disable-next-line eqeqeq
       name: restro.menuItems.find(m => m.id == itm.menuItemId).name,
     })),
+    remark,
   });
 
   // Update the table
