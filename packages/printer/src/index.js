@@ -1,104 +1,65 @@
+const moment = require('moment');
 const printer = require('node-thermal-printer');
 const config = require('../config.json');
 const formatBill = require('./formatBill');
 const formatOrder = require('./formatOrder');
 const connect = require('shocked-client').default;
+const createNetwork = require('shocked-network-node').default;
 const WebSocket = require('ws');
 
-// const printBill = require('./bill');
+const network = createNetwork({ domain: 'restro.net' });
 
-global.WebSocket = WebSocket;
-
-console.log(config.modes);
-const client = connect(`${config.server}/shocked/printer/${config.modes}`);
+const client = connect(
+  `${config.server}/shocked/printer/${config.modes}`,
+  null,
+  WebSocket,
+  network
+);
 
 printer.init(config);
 
-let retryConnect = true;
-let retryTimer = null;
-
-function reconnect() {
-  if (retryTimer) {
-    return;
-  }
-
-  retryTimer = setTimeout(() => {
-    retryTimer = null;
-    client.reconnect();
-  }, 1000);
-}
-
-client.on('connect', () => {
-  retryConnect = true;
-  clearTimeout(retryTimer);
-  retryTimer = null;
-  console.log('Connected');
+network.on('online', () => {
+  console.log('Connecting at', moment().format('HH:mm:ss'));
+  // Perform a reconnect as soon as we get a online signal
+  client.reconnect();
 });
 
-client.on('disconnect', () => {
-  console.log('Disconnected');
-  if (retryConnect) {
-    reconnect();
-  }
+network.on('offline', () => {
+  console.log('Got offline at', moment().format('HH:mm:ss'));
 });
 
-
-function print() {
-  const buf = printer.getBuffer();
-  printer.clear();
-  printer.raw(buf, (err) => {
-    if (err) {
-      console.error(err);
-    }
+async function print() {
+  return new Promise((resolve, reject) => {
+    const buf = printer.getBuffer();
+    printer.clear();
+    printer.raw(buf, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(true);
+      }
+    });
   });
 }
 
 // List for order printing events
 config.modes.split('|').map(m => m.trim()).forEach((m) => {
-  if (m === 'BILL') {
-    // Listen for bill printing events
-    client.on('BILL_PRINT', (data) => {
+  client.on(`${m}_PRINT`, async ({ data, serial }) => {
+    if (m === 'BILL') {
       formatBill(printer, data);
-      print();
-    });
-  } else {
-    console.log(`Listening for event ${m}_PRINT`);
-    client.on(`${m}_PRINT`, (data) => {
+    } else {
       formatOrder(printer, data);
-      print();
-    });
-  }
+    }
+
+    try {
+      await print();
+
+      const s = await client.scope('Printer');
+      s.printed(m, serial);
+      // client.rpc('Printer', 'printed', m, serial);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
+  });
 });
-
-
-// const data = {
-//   title: 'Fudo Cafe',
-//   subTitle: 'Baluwatar',
-//   pan: '333-333-333',
-//   table: '01',
-//   order: 1,
-//   date: Date.now(),
-//   items: [
-//     { name: 'N', rate: 10, qty: 1 },
-//     { name: 'Chicken Momo', rate: 220, qty: 18 },
-//     { name: 'Black Chimeny (Bottle)', rate: 1650, qty: 20 },
-//   ],
-//   headerLines: [],
-//   discount: 0,
-//   serviceCharge: 0,
-//   vat: 0,
-//   cashier: 'Samip Shrestha'
-// };
-
-// formatOrder(printer, data);
-// printer.execute((err) => {
-//   if (err) {
-//     console.error(err);
-//   } else {
-//     console.log('Print complete');
-//   }
-// });
-
-// setTimeout(() => {
-//   console.log('Finishing timer');
-// }, 2000);
