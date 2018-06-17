@@ -59,7 +59,6 @@ class InputBox extends React.Component<Props> {
 
   ok = async () => {
     const { content } = this.state;
-    console.log('Content', content);
     const res = await this.props.onSuccess(content);
     if (res) {
       this.setState({
