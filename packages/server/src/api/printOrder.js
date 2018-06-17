@@ -2,7 +2,7 @@ import schema from 'restro-common/schema';
 import db from '../db';
 import printer from './printer';
 
-export default async function printOrder(tableId) {
+export default async function printOrder(tableId, discount = 0, addServiceCharge = true) {
   const { session } = this;
 
   const user = await session.get('user');
@@ -27,9 +27,8 @@ export default async function printOrder(tableId) {
 
   table.activeOrder = null;
 
-  const discount = activeOrder.discount || 0;
   const orderTotal = activeOrder.items.reduce((a, i) => a + (i.qty * i.rate), 0) - discount;
-  const serviceCharge = orderTotal * restro.org.serviceCharge;
+  const serviceCharge = addServiceCharge ? (orderTotal * restro.org.serviceCharge) : 0;
   const vat = (orderTotal + serviceCharge) * restro.org.vat;
 
   // Broadcast for printing
@@ -42,7 +41,7 @@ export default async function printOrder(tableId) {
     serviceCharge,
     vat,
     cashier: user.name,
-    discount: activeOrder.discount || 0,
+    discount,
     items: activeOrder.items.map(itm => ({
       ...itm,
       // eslint-disable-next-line eqeqeq
