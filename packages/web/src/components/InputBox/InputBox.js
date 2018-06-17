@@ -1,26 +1,32 @@
+// @flow
 import React from 'react';
-import { Overlay, FormGroup, Intent } from '@blueprintjs/core';
+import type { Node } from 'react';
+import { Classes, Button, Overlay, FormGroup, Intent } from '@blueprintjs/core';
 
 let gid = 0;
 
-const el = document.createElement('div');
-document.body.appendChild(el);
+type Props = {
+  content: Object,
+  title: string,
+  onSuccess: (Object) => void,
+  children: () => Node | Array<Node>
+};
 
-class InputBox extends React.Component {
+class InputBox extends React.Component<Props> {
   constructor(props) {
     super(props);
 
     this.state = {
       content: props.content,
-      visible: props.visible,
+      visible: true,
     };
 
-    this.Input = ({ label, name }) => {
+    this.Input = ({ label, name, type }) => {
       gid += 1;
 
       const id = `inp-box-${gid}`;
       return (
-        <FormGroup label={label} labelFor={id} requiredLabel={required}>
+        <FormGroup label={label} labelFor={id}>
           <input
             className="pt-input pt-fill"
             type={type}
@@ -30,24 +36,19 @@ class InputBox extends React.Component {
           />
         </FormGroup>
       );
-    }
+    };
   }
 
   handleChange(name) {
     return (e) => {
-      this.setState((prev) => ({
+      const newValue = e.target.value;
+      this.setState(prev => ({
         content: {
-          ...prevState.content,
-          [name]: e.target.value,
+          ...prev.content,
+          [name]: newValue,
         },
       }));
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      visible: nextProps.visible,
-    });
   }
 
   hide = () => {
@@ -56,17 +57,19 @@ class InputBox extends React.Component {
     });
   }
 
-  ok = () => {
-    this.setState({
-      visible: false,
-    });
-
+  ok = async () => {
     const { content } = this.state;
-    this.props.onSuccess(content);
+    console.log('Content', content);
+    const res = await this.props.onSuccess(content);
+    if (res) {
+      this.setState({
+        visible: false,
+      });
+    }
   }
 
   render() {
-    const { onSuccess, title } = this.props;
+    const { title } = this.props;
     const { visible } = this.state;
 
     return (
@@ -76,13 +79,22 @@ class InputBox extends React.Component {
         hasBackdrop={false}
         transitionDuration={0}
       >
-        <div className={`${Classes.CARD}`} style={{ paddingTop: '60px' }}>
+        <div
+          className={`${Classes.CARD}`}
+          style={{
+            marginTop: '50px',
+            flex: 1,
+            display: 'flex',
+            width: '100%',
+            flexDirection: 'column',
+          }}
+        >
           <h3>{title}</h3>
           {this.props.children({ Input: this.Input })}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={this.hide}>Cancel</Button>
             <Button
-              onClick={onSuccess}
+              onClick={this.ok}
               intent={Intent.PRIMARY}
             >
               OK
@@ -92,10 +104,6 @@ class InputBox extends React.Component {
       </Overlay>
     );
   }
-}
-
-InputBox.show = (faachild, props) => {
-  createPortal(<InputBox {...props}>{faachild}</InputBox>, el);
 }
 
 export default InputBox;

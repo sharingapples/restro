@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import store from './redux';
+import InputBox from './components/InputBox';
 
 import './App.css';
 
@@ -9,7 +10,7 @@ import Mode from './mode';
 const Context = React.createContext({});
 
 class App extends Component {
-  state: {
+  state = {
     Prompt: null,
   };
 
@@ -43,13 +44,16 @@ class App extends Component {
   }
 }
 
+let id = 0;
+
 App.prompt = (child, props) => {
+  id += 1;
   App.self.setState({
     Prompt: (
-      <InputBox {...props}>{child}</InputBox>
+      <InputBox key={id} {...props}>{child}</InputBox>
     ),
   });
-}
+};
 
 export const { Consumer } = Context;
 
